@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}Notifications{% endblock %}
+{% block page_title %}Notifications{% endblock %}
+
+{% block content %}
+<h2 class="brand text-3xl text-primary mb-6 flex items-center gap-2">
+    <i data-lucide="bell" class="w-8 h-8 text-primary"></i> Notifications
+</h2>
+
+{% if notifications %}
+<div class="space-y-3">
+    {% for n in notifications %}
+    <div class="bg-white rounded-2xl shadow-sm border px-6 py-4
+        {% if not n.is_read %} border-accent {% else %} border-blue-50 {% endif %}">
+        <div class="flex justify-between items-start">
+            <p class="text-gray-700 text-sm">{{ n.message }}</p>
+            <span class="text-gray-400 text-xs ml-4 whitespace-nowrap">
+                {{ n.created_at|date:"M d, Y g:i A" }}
+            </span>
+        </div>
+        {% if not n.is_read %}
+            <span class="text-xs text-accent font-semibold mt-1 inline-block">● New</span>
+        {% endif %}
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="bg-blue-50 border border-blue-100 rounded-2xl px-8 py-12 text-center">
+    <p class="text-gray-500">You have no notifications yet.</p>
+</div>
+{% endif %}
+{% endblock %}

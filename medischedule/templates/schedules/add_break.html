@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %}Add Break{% endblock %}
+{% block page_title %}Add Break Time{% endblock %}
+
+{% block content %}
+<div class="max-w-lg mx-auto">
+    <div class="bg-white rounded-2xl shadow-sm border border-blue-50 overflow-hidden">
+        <div class="bg-orange-500 px-6 py-5">
+            <h2 class="brand text-white text-xl font-bold flex items-center gap-2">
+                <i data-lucide="coffee" class="w-5 h-5"></i> Add Break Time
+            </h2>
+            <p class="text-orange-100 text-sm mt-1">
+                For {{ availability.get_day_display }}
+                ({{ availability.start_time|time:"g:i A" }} – {{ availability.end_time|time:"g:i A" }})
+            </p>
+        </div>
+        <div class="px-6 py-6">
+            <form method="post">
+                {% csrf_token %}
+                {% for field in form %}
+                <div class="mb-5">
+                    <label class="block text-sm font-semibold text-gray-700 mb-1">
+                        {{ field.label }}
+                    </label>
+                    {{ field }}
+                    {% if field.errors %}
+                        <div class="mt-1 px-3 py-2 bg-red-50 border border-red-100 rounded-lg">
+                            {% for error in field.errors %}
+                                <p class="text-red-500 text-xs">• {{ error }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+                {% endfor %}
+                <div class="flex gap-3 mt-6">
+                    <button type="submit"
+                        class="flex-1 bg-orange-500 hover:bg-orange-600 text-white py-3 rounded-xl font-semibold transition flex items-center justify-center gap-2">
+                        <i data-lucide="check" class="w-4 h-4"></i> Add Break
+                    </button>
+                    <a href="/schedules/"
+                       class="flex-1 border border-gray-200 text-gray-600 py-3 rounded-xl font-semibold hover:bg-gray-50 transition text-center flex items-center justify-center gap-2">
+                        <i data-lucide="x" class="w-4 h-4"></i> Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

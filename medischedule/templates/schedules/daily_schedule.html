@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+{% block title %}Daily Schedule{% endblock %}
+{% block page_title %}Daily Schedule{% endblock %}
+
+{% block content %}
+<div class="space-y-4">
+
+    <!-- Date navigation -->
+    <div class="flex items-center justify-between bg-white rounded-2xl px-6 py-4 border border-blue-50 shadow-sm">
+        <a href="/schedules/daily/{{ prev_date|date:'Y-m-d' }}/"
+           class="text-primary hover:text-blue-900 font-semibold text-sm transition flex items-center gap-1">
+            <i data-lucide="chevron-left" class="w-4 h-4"></i> Previous
+        </a>
+        <div class="text-center">
+            <p class="brand font-bold text-gray-800 text-lg">{{ view_date }}</p>
+            {% if view_date == today %}
+            <span class="bg-primary text-white text-xs px-2 py-0.5 rounded-full">Today</span>
+            {% endif %}
+        </div>
+        <a href="/schedules/daily/{{ next_date|date:'Y-m-d' }}/"
+           class="text-primary hover:text-blue-900 font-semibold text-sm transition flex items-center gap-1">
+            Next <i data-lucide="chevron-right" class="w-4 h-4"></i>
+        </a>
+    </div>
+
+    <!-- Slots -->
+    {% if slots %}
+    <div class="bg-white rounded-2xl border border-blue-50 shadow-sm overflow-hidden">
+        <div class="divide-y divide-gray-50">
+            {% for slot in slots %}
+            <div class="flex items-center justify-between px-6 py-4
+                {% if slot.status == 'booked' %}bg-blue-50
+                {% elif slot.status == 'break' %}bg-orange-50
+                {% elif slot.status == 'blocked' %}bg-gray-50
+                {% else %}bg-white{% endif %}">
+                <div class="flex items-center gap-4">
+                    <span class="font-mono text-sm font-bold text-gray-600 w-28 flex items-center gap-1.5">
+                        <i data-lucide="clock" class="w-4 h-4 text-gray-400"></i>
+                        {{ slot.start_time|time:"g:i A" }}
+                    </span>
+                    {% if slot.status == 'booked' and slot.appointment %}
+                    <div>
+                        <p class="text-sm font-semibold text-gray-800">
+                            {{ slot.appointment.patient.get_full_name|default:slot.appointment.patient.username }}
+                        </p>
+                        <p class="text-xs text-gray-400">
+                            {{ slot.get_slot_type_display }} — {{ slot.appointment.reason|truncatechars:40|default:"No reason given" }}
+                        </p>
+                    </div>
+                    {% elif slot.status == 'break' %}
+                    <span class="text-orange-600 text-sm font-medium flex items-center gap-1.5">
+                        <i data-lucide="coffee" class="w-4 h-4"></i> Break
+                    </span>
+                    {% elif slot.status == 'blocked' %}
+                    <span class="text-gray-500 text-sm font-medium flex items-center gap-1.5">
+                        <i data-lucide="ban" class="w-4 h-4"></i> Blocked
+                    </span>
+                    {% else %}
+                    <span class="text-green-600 text-sm font-medium flex items-center gap-1.5">
+                        <i data-lucide="check-circle" class="w-4 h-4"></i> Available
+                    </span>
+                    {% endif %}
+                </div>
+
+                <div class="flex items-center gap-3">
+                    {% if slot.status == 'booked' and slot.appointment %}
+                        {% if slot.appointment.status == 'pending' %}
+                        <a href="/appointments/confirm/{{ slot.appointment.pk }}/"
+                           class="bg-green-500 text-white text-xs px-3 py-1 rounded-lg hover:bg-green-600 transition flex items-center gap-1">
+                            <i data-lucide="check" class="w-3.5 h-3.5"></i> Confirm
+                        </a>
+                        {% else %}
+                        <span class="bg-green-100 text-green-700 text-xs px-2 py-0.5 rounded-full">
+                            {{ slot.appointment.status|title }}
+                        </span>
+                        {% endif %}
+                        <a href="/appointments/cancel/{{ slot.appointment.pk }}/"
+                           onclick="return confirm('Cancel this appointment?')"
+                           class="text-red-400 hover:text-red-600 text-xs border border-red-200 px-2 py-0.5 rounded-lg transition flex items-center gap-1">
+                            <i data-lucide="x" class="w-3 h-3"></i> Cancel
+                        </a>
+                    {% elif slot.status == 'available' %}
+                    <a href="/schedules/slot/block/{{ slot.pk }}/"
+                       class="text-gray-400 hover:text-red-500 text-xs border border-gray-200 px-2 py-0.5 rounded-lg transition flex items-center gap-1">
+                        <i data-lucide="lock" class="w-3 h-3"></i> Block
+                    </a>
+                    {% elif slot.status == 'blocked' %}
+                    <a href="/schedules/slot/unblock/{{ slot.pk }}/"
+                       class="text-green-500 hover:text-green-700 text-xs border border-green-200 px-2 py-0.5 rounded-lg transition flex items-center gap-1">
+                        <i data-lucide="unlock" class="w-3 h-3"></i> Unblock
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% else %}
+    <div class="bg-white rounded-2xl border border-blue-50 shadow-sm px-6 py-12 text-center">
+        <p class="text-gray-400 text-sm">No slots for this date.</p>
+        <p class="text-gray-300 text-xs mt-1">Make sure you have availability set for this day.</p>
+    </div>
+    {% endif %}
+
+</div>
+{% endblock %}

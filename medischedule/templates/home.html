@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MediSchedule – Your Health, Scheduled Right</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#1e40af',
+                        accent: '#3b82f6',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        .brand { font-family: 'Space Grotesk', sans-serif; }
+        .hero-gradient { background: linear-gradient(135deg, #0a1628 0%, #0f4c81 50%, #1e40af 100%); }
+        .card-hover { transition: all 0.3s ease; }
+        .card-hover:hover { transform: translateY(-5px); box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-up { animation: fadeUp 0.8s ease forwards; }
+    </style>
+</head>
+<body class="bg-white">
+
+<!-- NAVBAR -->
+<nav class="fixed top-0 w-full z-50 bg-white/95 backdrop-blur-sm border-b border-gray-100 px-8 py-4 flex items-center justify-between shadow-sm">
+    <h1 class="brand text-xl font-bold text-gray-900 flex items-center gap-2">
+        <i data-lucide="hospital" class="w-6 h-6 text-blue-600"></i> MediSchedule
+    </h1>
+    <div class="flex items-center gap-3">
+        <a href="/accounts/login/"
+           class="text-gray-600 hover:text-gray-900 text-sm font-medium transition px-4 py-2 rounded-lg hover:bg-gray-50">
+            Login
+        </a>
+        <a href="/accounts/register/"
+           class="bg-blue-600 text-white text-sm font-semibold px-5 py-2.5 rounded-xl hover:bg-blue-700 transition shadow-sm flex items-center gap-2">
+            Get Started <i data-lucide="arrow-right" class="w-4 h-4"></i>
+        </a>
+    </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero-gradient min-h-screen flex items-center justify-center px-8 pt-20">
+    <div class="max-w-4xl mx-auto text-center animate-fade-up">
+        <span class="inline-flex items-center gap-2 bg-blue-500/20 text-blue-200 text-xs font-semibold px-4 py-2 rounded-full mb-8 border border-blue-400/30 tracking-wide uppercase">
+            <i data-lucide="hospital" class="w-3.5 h-3.5"></i> Hospital Scheduling Made Simple
+        </span>
+        <h1 class="brand text-6xl md:text-7xl font-bold text-white leading-tight mb-6">
+            Your Health,<br>
+            <span class="text-blue-300">Scheduled Right</span>
+        </h1>
+        <p class="text-blue-100 text-lg md:text-xl max-w-2xl mx-auto mb-10 leading-relaxed">
+            MediSchedule connects patients with doctors, manages staff schedules,
+            and keeps everyone notified — all in one place.
+        </p>
+        <div class="flex flex-wrap justify-center gap-4 mb-16">
+            <a href="/accounts/register/"
+               class="bg-white text-blue-900 font-bold px-8 py-4 rounded-xl hover:bg-blue-50 transition text-sm shadow-lg flex items-center gap-2">
+                <i data-lucide="edit-3" class="w-4 h-4 text-blue-950"></i> Create Free Account
+            </a>
+            <a href="/accounts/login/"
+               class="border-2 border-white/30 text-white font-semibold px-8 py-4 rounded-xl hover:bg-white/10 transition text-sm flex items-center gap-2">
+                <i data-lucide="lock" class="w-4 h-4"></i> Sign In
+            </a>
+        </div>
+
+        <!-- Stats -->
+        <div class="grid grid-cols-3 gap-8 max-w-lg mx-auto border-t border-white/10 pt-10">
+            <div class="text-center">
+                <p class="brand text-4xl font-bold text-white">15+</p>
+                <p class="text-blue-300 text-xs mt-2 font-medium tracking-wide uppercase">Staff Roles</p>
+            </div>
+            <div class="text-center border-x border-white/20">
+                <p class="brand text-4xl font-bold text-white">3</p>
+                <p class="text-blue-300 text-xs mt-2 font-medium tracking-wide uppercase">Notification Types</p>
+            </div>
+            <div class="text-center">
+                <p class="brand text-4xl font-bold text-white">24/7</p>
+                <p class="text-blue-300 text-xs mt-2 font-medium tracking-wide uppercase">Availability</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- FEATURES -->
+<section class="py-24 px-8 bg-gray-50">
+    <div class="max-w-5xl mx-auto">
+        <div class="text-center mb-16">
+            <span class="text-blue-600 text-xs font-bold uppercase tracking-widest">Features</span>
+            <h2 class="brand text-4xl font-bold text-gray-900 mt-2 mb-4">Everything You Need</h2>
+            <p class="text-gray-500 max-w-xl mx-auto">A complete hospital scheduling system built for patients, doctors, and hospital staff.</p>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="card-hover bg-white rounded-2xl p-7 border border-gray-100 shadow-sm">
+                <div class="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center text-blue-600 mb-5">
+                    <i data-lucide="calendar" class="w-6 h-6"></i>
+                </div>
+                <h3 class="brand font-semibold text-gray-800 text-lg mb-2">Easy Booking</h3>
+                <p class="text-gray-500 text-sm leading-relaxed">Patients can book appointments with any available clinical staff in seconds. No phone calls needed.</p>
+            </div>
+            <div class="card-hover bg-white rounded-2xl p-7 border border-gray-100 shadow-sm">
+                <div class="w-12 h-12 bg-green-50 rounded-xl flex items-center justify-center text-green-600 mb-5">
+                    <i data-lucide="calendar-days" class="w-6 h-6"></i>
+                </div>
+                <h3 class="brand font-semibold text-gray-800 text-lg mb-2">Staff Scheduling</h3>
+                <p class="text-gray-500 text-sm leading-relaxed">Doctors and clinical staff can set their availability, manage appointments and track their daily schedule.</p>
+            </div>
+            <div class="card-hover bg-white rounded-2xl p-7 border border-gray-100 shadow-sm">
+                <div class="w-12 h-12 bg-purple-50 rounded-xl flex items-center justify-center text-purple-600 mb-5">
+                    <i data-lucide="bell" class="w-6 h-6"></i>
+                </div>
+                <h3 class="brand font-semibold text-gray-800 text-lg mb-2">Smart Notifications</h3>
+                <p class="text-gray-500 text-sm leading-relaxed">Get notified via Email, SMS, and browser push notifications for every appointment and update.</p>
+            </div>
+            <div class="card-hover bg-white rounded-2xl p-7 border border-gray-100 shadow-sm">
+                <div class="w-12 h-12 bg-yellow-50 rounded-xl flex items-center justify-center text-yellow-600 mb-5">
+                    <i data-lucide="megaphone" class="w-6 h-6"></i>
+                </div>
+                <h3 class="brand font-semibold text-gray-800 text-lg mb-2">Manager Meetings</h3>
+                <p class="text-gray-500 text-sm leading-relaxed">Managers can schedule meetings with all staff at once with a single click and everyone gets notified instantly.</p>
+            </div>
+            <div class="card-hover bg-white rounded-2xl p-7 border border-gray-100 shadow-sm">
+                <div class="w-12 h-12 bg-red-50 rounded-xl flex items-center justify-center text-red-600 mb-5">
+                    <i data-lucide="users" class="w-6 h-6"></i>
+                </div>
+                <h3 class="brand font-semibold text-gray-800 text-lg mb-2">Role Based Access</h3>
+                <p class="text-gray-500 text-sm leading-relaxed">15+ hospital roles including doctors, nurses, pharmacists, lab scientists, and administrative staff.</p>
+            </div>
+            <div class="card-hover bg-white rounded-2xl p-7 border border-gray-100 shadow-sm">
+                <div class="w-12 h-12 bg-cyan-50 rounded-xl flex items-center justify-center text-cyan-600 mb-5">
+                    <i data-lucide="layout-dashboard" class="w-6 h-6"></i>
+                </div>
+                <h3 class="brand font-semibold text-gray-800 text-lg mb-2">Admin Dashboard</h3>
+                <p class="text-gray-500 text-sm leading-relaxed">Full visibility into appointments, staff counts, and activity across the entire hospital system.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="py-24 px-8 bg-white">
+    <div class="max-w-4xl mx-auto">
+        <div class="text-center mb-16">
+            <span class="text-blue-600 text-xs font-bold uppercase tracking-widest">Process</span>
+            <h2 class="brand text-4xl font-bold text-gray-900 mt-2 mb-4">How It Works</h2>
+            <p class="text-gray-500">Get started in three simple steps</p>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
+            <div class="text-center">
+                <div class="w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-700 rounded-2xl flex items-center justify-center text-white text-2xl font-bold mx-auto mb-5 shadow-lg brand">1</div>
+                <h3 class="brand font-semibold text-gray-800 text-lg mb-2">Create Account</h3>
+                <p class="text-gray-500 text-sm leading-relaxed">Register with your name, email and Nigerian phone number. All new accounts start as patients.</p>
+            </div>
+            <div class="text-center">
+                <div class="w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-700 rounded-2xl flex items-center justify-center text-white text-2xl font-bold mx-auto mb-5 shadow-lg brand">2</div>
+                <h3 class="brand font-semibold text-gray-800 text-lg mb-2">Book Appointment</h3>
+                <p class="text-gray-500 text-sm leading-relaxed">Choose your preferred doctor or clinical staff, pick a date and time, and confirm your booking.</p>
+            </div>
+            <div class="text-center">
+                <div class="w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-700 rounded-2xl flex items-center justify-center text-white text-2xl font-bold mx-auto mb-5 shadow-lg brand">3</div>
+                <h3 class="brand font-semibold text-gray-800 text-lg mb-2">Get Notified</h3>
+                <p class="text-gray-500 text-sm leading-relaxed">Receive instant confirmation via Email, SMS and browser notification. Show up at your scheduled time.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- WHO IS IT FOR -->
+<section class="py-24 px-8 bg-gray-50">
+    <div class="max-w-5xl mx-auto">
+        <div class="text-center mb-16">
+            <span class="text-blue-600 text-xs font-bold uppercase tracking-widest">Roles</span>
+            <h2 class="brand text-4xl font-bold text-gray-900 mt-2 mb-4">Built For Everyone</h2>
+            <p class="text-gray-500">MediSchedule serves every role in the hospital</p>
+        </div>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div class="bg-white rounded-2xl px-4 py-6 text-center border border-gray-100 shadow-sm card-hover flex flex-col items-center">
+                <div class="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center mb-3">
+                    <i data-lucide="heart-pulse" class="w-5 h-5 text-blue-500"></i>
+                </div>
+                <p class="brand font-semibold text-gray-800 text-sm">Patients</p>
+                <p class="text-gray-400 text-xs mt-1">Book & track appointments</p>
+            </div>
+            <div class="bg-white rounded-2xl px-4 py-6 text-center border border-gray-100 shadow-sm card-hover flex flex-col items-center">
+                <div class="w-10 h-10 rounded-full bg-green-50 flex items-center justify-center mb-3">
+                    <i data-lucide="stethoscope" class="w-5 h-5 text-green-500"></i>
+                </div>
+                <p class="brand font-semibold text-gray-800 text-sm">Doctors</p>
+                <p class="text-gray-400 text-xs mt-1">Manage schedules</p>
+            </div>
+            <div class="bg-white rounded-2xl px-4 py-6 text-center border border-gray-100 shadow-sm card-hover flex flex-col items-center">
+                <div class="w-10 h-10 rounded-full bg-red-50 flex items-center justify-center mb-3">
+                    <i data-lucide="activity" class="w-5 h-5 text-red-500"></i>
+                </div>
+                <p class="brand font-semibold text-gray-800 text-sm">Nurses</p>
+                <p class="text-gray-400 text-xs mt-1">View appointments</p>
+            </div>
+            <div class="bg-white rounded-2xl px-4 py-6 text-center border border-gray-100 shadow-sm card-hover flex flex-col items-center">
+                <div class="w-10 h-10 rounded-full bg-purple-50 flex items-center justify-center mb-3">
+                    <i data-lucide="pill" class="w-5 h-5 text-purple-500"></i>
+                </div>
+                <p class="brand font-semibold text-gray-800 text-sm">Pharmacists</p>
+                <p class="text-gray-400 text-xs mt-1">Staff scheduling</p>
+            </div>
+            <div class="bg-white rounded-2xl px-4 py-6 text-center border border-gray-100 shadow-sm card-hover flex flex-col items-center">
+                <div class="w-10 h-10 rounded-full bg-indigo-50 flex items-center justify-center mb-3">
+                    <i data-lucide="microscope" class="w-5 h-5 text-indigo-500"></i>
+                </div>
+                <p class="brand font-semibold text-gray-800 text-sm">Lab Scientists</p>
+                <p class="text-gray-400 text-xs mt-1">Book meetings</p>
+            </div>
+            <div class="bg-white rounded-2xl px-4 py-6 text-center border border-gray-100 shadow-sm card-hover flex flex-col items-center">
+                <div class="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center mb-3">
+                    <i data-lucide="clipboard-list" class="w-5 h-5 text-gray-500"></i>
+                </div>
+                <p class="brand font-semibold text-gray-800 text-sm">Admin Staff</p>
+                <p class="text-gray-400 text-xs mt-1">Hospital operations</p>
+            </div>
+            <div class="bg-white rounded-2xl px-4 py-6 text-center border border-gray-100 shadow-sm card-hover flex flex-col items-center">
+                <div class="w-10 h-10 rounded-full bg-yellow-50 flex items-center justify-center mb-3">
+                    <i data-lucide="briefcase" class="w-5 h-5 text-yellow-500"></i>
+                </div>
+                <p class="brand font-semibold text-gray-800 text-sm">Managers</p>
+                <p class="text-gray-400 text-xs mt-1">Call staff meetings</p>
+            </div>
+            <div class="bg-white rounded-2xl px-4 py-6 text-center border border-gray-100 shadow-sm card-hover flex flex-col items-center">
+                <div class="w-10 h-10 rounded-full bg-cyan-50 flex items-center justify-center mb-3">
+                    <i data-lucide="settings" class="w-5 h-5 text-cyan-500"></i>
+                </div>
+                <p class="brand font-semibold text-gray-800 text-sm">Admins</p>
+                <p class="text-gray-400 text-xs mt-1">Full system control</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA -->
+<section class="hero-gradient py-24 px-8">
+    <div class="max-w-2xl mx-auto text-center">
+        <h2 class="brand text-4xl font-bold text-white mb-4">Ready to Get Started?</h2>
+        <p class="text-blue-200 mb-10 text-lg">Join MediSchedule today and experience smarter hospital scheduling.</p>
+        <div class="flex flex-wrap justify-center gap-4">
+            <a href="/accounts/register/"
+               class="bg-white text-blue-900 font-bold px-10 py-4 rounded-xl hover:bg-blue-50 transition text-sm shadow-lg flex items-center gap-2 justify-center">
+                <i data-lucide="edit-3" class="w-4 h-4 text-blue-950"></i> Create Free Account
+            </a>
+            <a href="/accounts/login/"
+               class="border-2 border-white/30 text-white font-semibold px-10 py-4 rounded-xl hover:bg-white/10 transition text-sm flex items-center gap-2 justify-center">
+                <i data-lucide="lock" class="w-4 h-4"></i> Sign In
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="bg-gray-900 px-8 py-12">
+    <div class="max-w-5xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
+        <div>
+            <h3 class="brand text-white font-bold text-xl flex items-center gap-2">
+                <i data-lucide="hospital" class="w-5 h-5 text-blue-400"></i> MediSchedule
+            </h3>
+            <p class="text-gray-500 text-xs mt-1">Hospital Scheduling System — FUTO SEN 310</p>
+        </div>
+        <div class="flex gap-8">
+            <a href="/accounts/login/" class="text-gray-400 hover:text-white text-sm transition">Login</a>
+            <a href="/accounts/register/" class="text-gray-400 hover:text-white text-sm transition">Register</a>
+        </div>
+        <p class="text-gray-600 text-xs">© 2026 MediSchedule. Built with Django & Tailwind.</p>
+    </div>
+</footer>
+
+<script>
+    // Initialize Lucide Icons
+    lucide.createIcons();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,183 @@
+{% extends "base.html" %}
+{% block title %}My Appointments{% endblock %}
+{% block page_title %}My Appointments{% endblock %}
+
+{% block content %}
+<div class="space-y-4">
+
+    <!-- Filter bar -->
+    <div class="bg-white rounded-2xl shadow-sm border border-blue-50 px-6 py-4">
+        <form method="get" class="flex flex-wrap gap-3 items-center">
+            <input type="text"
+                   name="search"
+                   value="{{ search_query }}"
+                   placeholder="Search by name..."
+                   class="border border-gray-200 rounded-xl px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300 flex-1 min-w-48">
+            <select name="status"
+                    class="border border-gray-200 rounded-xl px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300 bg-white">
+                <option value="">All Status</option>
+                <option value="pending" {% if status_filter == 'pending' %}selected{% endif %}>Pending</option>
+                <option value="confirmed" {% if status_filter == 'confirmed' %}selected{% endif %}>Confirmed</option>
+                <option value="completed" {% if status_filter == 'completed' %}selected{% endif %}>Completed</option>
+                <option value="cancelled" {% if status_filter == 'cancelled' %}selected{% endif %}>Cancelled</option>
+            </select>
+            <button type="submit"
+                    class="bg-primary text-white px-5 py-2 rounded-xl text-sm font-semibold hover:bg-blue-900 transition flex items-center gap-1.5">
+                <i data-lucide="search" class="w-4 h-4"></i> Filter
+            </button>
+            {% if status_filter or search_query %}
+            <a href="/appointments/my/"
+               class="text-gray-400 hover:text-gray-600 text-sm px-3 py-2 rounded-xl border border-gray-200 transition flex items-center gap-1">
+                <i data-lucide="x" class="w-3.5 h-3.5"></i> Clear
+            </a>
+            {% endif %}
+        </form>
+    </div>
+
+    <!-- Header -->
+    <div class="flex justify-between items-center">
+        <p class="text-gray-500 text-sm">
+            {{ total_count }} appointment{{ total_count|pluralize }} found
+        </p>
+        {% if user.role == 'patient' %}
+        <a href="/appointments/book/"
+           class="bg-primary text-white px-5 py-2 rounded-xl text-sm font-semibold hover:bg-blue-900 transition">
+            + New Appointment
+        </a>
+        {% endif %}
+    </div>
+
+    {% if appointments %}
+    <div class="space-y-4">
+        {% for appt in appointments %}
+        <div class="bg-white rounded-2xl shadow-sm border border-blue-50 px-6 py-5">
+            <div class="flex justify-between items-start">
+                <div class="flex-1">
+
+                    {% if user.role == 'patient' %}
+                    <p class="font-semibold text-gray-800 text-lg flex items-center gap-2">
+                        {% if appt.appointment_type == 'manager_meeting' %}
+                            <i data-lucide="megaphone" class="w-5 h-5 text-gray-500"></i> Staff Meeting
+                        {% else %}
+                            {{ appt.doctor.get_full_name|default:appt.doctor.username }}
+                            <span class="text-gray-400 text-sm font-normal">
+                                ({{ appt.doctor.role|title }})
+                            </span>
+                        {% endif %}
+                    </p>
+                    {% else %}
+                    <p class="font-semibold text-gray-800 text-lg flex items-center gap-2">
+                        {% if appt.appointment_type == 'manager_meeting' %}
+                            <i data-lucide="megaphone" class="w-5 h-5 text-gray-500"></i> Meeting by {{ appt.patient.get_full_name|default:appt.patient.username }}
+                        {% elif appt.appointment_type == 'staff_meeting' %}
+                            Meeting with {{ appt.patient.get_full_name|default:appt.patient.username }}
+                        {% else %}
+                            {{ appt.patient.get_full_name|default:appt.patient.username }}
+                            <span class="text-gray-400 text-sm font-normal">(Patient)</span>
+                        {% endif %}
+                    </p>
+                    {% endif %}
+
+                    <p class="text-gray-400 text-sm mt-1 flex items-center gap-1.5">
+                        <i data-lucide="calendar" class="w-4 h-4 text-gray-400"></i> {{ appt.date }} &nbsp;|&nbsp; <i data-lucide="clock" class="w-4 h-4 text-gray-400"></i> {{ appt.time|time:"g:i A" }}
+                    </p>
+
+                    {% if appt.reason %}
+                    <p class="text-gray-500 text-sm mt-2 bg-gray-50 px-3 py-2 rounded-lg">
+                        {{ appt.reason }}
+                    </p>
+                    {% endif %}
+
+                </div>
+
+                <div class="flex flex-col items-end gap-3 ml-4">
+                    {% if appt.status == 'pending' %}
+                        <span class="bg-yellow-100 text-yellow-700 text-xs font-semibold px-3 py-1.5 rounded-full flex items-center gap-1">
+                            <i data-lucide="clock" class="w-3.5 h-3.5"></i> Pending
+                        </span>
+                    {% elif appt.status == 'confirmed' %}
+                        <a href="/appointments/reschedule/{{ appt.pk }}/"
+                           class="text-xs bg-yellow-500 text-white px-3 py-1 rounded-lg hover:bg-yellow-600 transition flex items-center gap-1">
+                            <i data-lucide="calendar" class="w-3.5 h-3.5"></i> Reschedule
+                        </a>
+                        <span class="bg-green-100 text-green-700 text-xs font-semibold px-3 py-1.5 rounded-full flex items-center gap-1">
+                            <i data-lucide="check" class="w-3.5 h-3.5"></i> Confirmed
+                        </span>
+                    {% elif appt.status == 'cancelled' %}
+                        <span class="bg-red-100 text-red-700 text-xs font-semibold px-3 py-1.5 rounded-full flex items-center gap-1">
+                            <i data-lucide="x" class="w-3.5 h-3.5"></i> Cancelled
+                        </span>
+                    {% elif appt.status == 'completed' %}
+                        <span class="bg-gray-100 text-gray-600 text-xs font-semibold px-3 py-1.5 rounded-full flex items-center gap-1">
+                            <i data-lucide="check-circle" class="w-3.5 h-3.5"></i> Completed
+                        </span>
+                    {% endif %}
+
+                    <div class="flex gap-2">
+                        {% if user.role == 'patient' %}
+                            {% if appt.status == 'pending' or appt.status == 'confirmed' %}
+                            <a href="/appointments/cancel/{{ appt.pk }}/"
+                               onclick="return confirm('Cancel this appointment?')"
+                               class="text-xs text-red-400 hover:text-red-600 border border-red-200 px-3 py-1 rounded-lg transition">
+                                Cancel
+                            </a>
+                            {% endif %}
+                        {% else %}
+                            {% if appt.status == 'pending' %}
+                            <a href="/appointments/confirm/{{ appt.pk }}/"
+                               class="text-xs bg-green-500 text-white px-3 py-1 rounded-lg hover:bg-green-600 transition">
+                                ✓ Confirm
+                            </a>
+                            <a href="/appointments/cancel/{{ appt.pk }}/"
+                               onclick="return confirm('Cancel this appointment?')"
+                               class="text-xs text-red-400 hover:text-red-600 border border-red-200 px-3 py-1 rounded-lg transition">
+                                Cancel
+                            </a>
+                            {% elif appt.status == 'confirmed' %}
+                            <a href="/appointments/complete/{{ appt.pk }}/"
+                               onclick="return confirm('Mark as completed?')"
+                               class="text-xs bg-blue-500 text-white px-3 py-1 rounded-lg hover:bg-blue-600 transition">
+                                ✔ Mark Done
+                            </a>
+                            <a href="/appointments/cancel/{{ appt.pk }}/"
+                               onclick="return confirm('Cancel this appointment?')"
+                               class="text-xs text-red-400 hover:text-red-600 border border-red-200 px-3 py-1 rounded-lg transition">
+                                Cancel
+                            </a>
+                            {% endif %}
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    {% else %}
+    <div class="bg-white rounded-2xl border border-blue-50 shadow-sm px-8 py-16 text-center">
+        <div class="flex justify-center mb-3">
+            <i data-lucide="inbox" class="w-12 h-12 text-gray-300"></i>
+        </div>
+        <p class="text-gray-400 text-lg mb-2">
+            {% if status_filter or search_query %}
+                No appointments match your search.
+            {% else %}
+                No appointments yet.
+            {% endif %}
+        </p>
+        {% if status_filter or search_query %}
+        <a href="/appointments/my/"
+           class="text-primary font-semibold hover:underline text-sm">
+            Clear filters →
+        </a>
+        {% elif user.role == 'patient' %}
+        <a href="/appointments/book/"
+           class="text-primary font-semibold hover:underline text-sm">
+            Book your first appointment →
+        </a>
+        {% endif %}
+    </div>
+    {% endif %}
+
+</div>
+{% endblock %}

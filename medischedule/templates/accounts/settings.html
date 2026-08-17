@@ -1,0 +1,151 @@
+{% extends "base.html" %}
+{% load webpush_notifications %}
+{% block title %}Settings{% endblock %}
+{% block page_title %}Account Settings{% endblock %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto space-y-6">
+
+    <!-- Push Notifications Card -->
+    <div class="bg-white rounded-2xl shadow-sm border border-blue-50 px-6 py-6">
+        <div class="flex justify-between items-start mb-4">
+            <div>
+                <h3 class="font-semibold text-gray-800 text-lg flex items-center gap-2">
+                    <i data-lucide="bell" class="w-5 h-5 text-blue-600"></i> Push Notifications
+                </h3>
+                <p class="text-gray-400 text-sm mt-1">Browser popup notifications</p>
+            </div>
+            <span class="bg-blue-50 text-primary text-xs font-semibold px-3 py-1 rounded-full">
+                Browser
+            </span>
+        </div>
+        <div class="bg-gray-50 rounded-xl px-5 py-4 mb-4">
+            <p class="text-sm text-gray-600 mb-2"><strong>You will be notified about:</strong></p>
+            <ul class="text-sm text-gray-500 space-y-2">
+                <li class="flex items-center gap-1.5">
+                    <i data-lucide="check-circle-2" class="w-4 h-4 text-green-500"></i>
+                    Appointment booked or confirmed
+                </li>
+                <li class="flex items-center gap-1.5">
+                    <i data-lucide="check-circle-2" class="w-4 h-4 text-green-500"></i>
+                    Appointment cancelled or completed
+                </li>
+                <li class="flex items-center gap-1.5">
+                    <i data-lucide="check-circle-2" class="w-4 h-4 text-green-500"></i>
+                    Manager calls a staff meeting
+                </li>
+                <li class="flex items-center gap-1.5">
+                    <i data-lucide="check-circle-2" class="w-4 h-4 text-green-500"></i>
+                    Schedule reminders
+                </li>
+                <li class="flex items-center gap-1.5">
+                    <i data-lucide="check-circle-2" class="w-4 h-4 text-green-500"></i>
+                    Account activity
+                </li>
+            </ul>
+        </div>
+        <div class="mt-4">
+            {% webpush_button %}
+        </div>
+    </div>
+
+    <!-- Notification Channels -->
+    <form method="post" action="/accounts/settings/">
+        {% csrf_token %}
+        <div class="bg-white rounded-2xl shadow-sm border border-blue-50 px-6 py-6 mb-6">
+            <h3 class="font-semibold text-gray-800 text-lg mb-4 flex items-center gap-2">
+                <i data-lucide="mail-open" class="w-5 h-5 text-blue-600"></i> Notification Channels
+            </h3>
+
+            <!-- Email toggle -->
+            <div class="flex items-center justify-between py-3 border-b border-gray-50">
+                <div>
+                    <p class="text-sm font-medium text-gray-700 flex items-center gap-1.5">
+                        <i data-lucide="mail" class="w-4 h-4 text-gray-500"></i> Email Notifications
+                    </p>
+                    <p class="text-xs text-gray-400 mt-0.5">Sent to {{ user.email }}</p>
+                </div>
+                <label class="relative inline-flex items-center cursor-pointer">
+                    <input type="checkbox" name="email_notifications"
+                           class="sr-only peer"
+                           {% if user.email_notifications %}checked{% endif %}>
+                    <div class="w-11 h-6 bg-gray-200 rounded-full peer
+                        peer-checked:bg-primary
+                        peer-checked:after:translate-x-full
+                        after:content-[''] after:absolute after:top-[2px] after:left-[2px]
+                        after:bg-white after:rounded-full after:h-5 after:w-5
+                        after:transition-all">
+                    </div>
+                </label>
+            </div>
+
+            <!-- SMS toggle -->
+            <div class="flex items-center justify-between py-3">
+                <div>
+                    <p class="text-sm font-medium text-gray-700 flex items-center gap-1.5">
+                        <i data-lucide="smartphone" class="w-4 h-4 text-gray-500"></i> SMS Notifications
+                    </p>
+                    <p class="text-xs text-gray-400 mt-0.5">Sent to {{ user.phone }}</p>
+                </div>
+                <label class="relative inline-flex items-center cursor-pointer">
+                    <input type="checkbox" name="sms_notifications"
+                           class="sr-only peer"
+                           {% if user.sms_notifications %}checked{% endif %}>
+                    <div class="w-11 h-6 bg-gray-200 rounded-full peer
+                        peer-checked:bg-primary
+                        peer-checked:after:translate-x-full
+                        after:content-[''] after:absolute after:top-[2px] after:left-[2px]
+                        after:bg-white after:rounded-full after:h-5 after:w-5
+                        after:transition-all">
+                    </div>
+                </label>
+            </div>
+        </div>
+
+        <button type="submit"
+            class="w-full bg-primary hover:bg-blue-900 text-white py-3 rounded-xl font-semibold transition flex items-center justify-center gap-2">
+            <i data-lucide="save" class="w-4 h-4"></i> Save Preferences
+        </button>
+    </form>
+
+    <!-- Account Info -->
+    <div class="bg-white rounded-2xl shadow-sm border border-blue-50 px-6 py-6">
+        <h3 class="font-semibold text-gray-800 text-lg mb-4 flex items-center gap-2">
+            <i data-lucide="user" class="w-5 h-5 text-blue-600"></i> Account Info
+        </h3>
+        <div class="space-y-3">
+            <div class="flex justify-between items-center">
+                <span class="text-gray-500 text-sm">Username</span>
+                <span class="text-gray-700 text-sm font-medium">{{ user.username }}</span>
+            </div>
+            <div class="flex justify-between items-center">
+                <span class="text-gray-500 text-sm">Full Name</span>
+                <span class="text-gray-700 text-sm font-medium">
+                    {{ user.get_full_name|default:"Not set" }}
+                </span>
+            </div>
+            <div class="flex justify-between items-center">
+                <span class="text-gray-500 text-sm">Role</span>
+                <span class="bg-accent text-white text-xs px-3 py-0.5 rounded-full">
+                    {{ user.role }}
+                </span>
+            </div>
+            <div class="flex justify-between items-center">
+                <span class="text-gray-500 text-sm">Email</span>
+                <span class="text-gray-700 text-sm font-medium">{{ user.email }}</span>
+            </div>
+            <div class="flex justify-between items-center">
+                <span class="text-gray-500 text-sm">Phone</span>
+                <span class="text-gray-700 text-sm font-medium">{{ user.phone }}</span>
+            </div>
+            <div class="flex justify-between items-center">
+                <span class="text-gray-500 text-sm">Gender</span>
+                <span class="text-gray-700 text-sm font-medium">
+                    {{ user.gender|default:"Not set"|title }}
+                </span>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

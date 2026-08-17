@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block title %}My Schedule{% endblock %}
+{% block page_title %}My Schedule{% endblock %}
+
+{% block content %}
+<div class="flex justify-between items-center mb-6">
+    <h2 class="brand text-3xl text-primary flex items-center gap-2">
+        <i data-lucide="calendar" class="w-8 h-8"></i> My Schedule
+    </h2>
+    <a href="/schedules/add/"
+       class="bg-primary text-white px-5 py-2.5 rounded-xl text-sm font-semibold hover:bg-blue-900 transition flex items-center gap-2">
+        <i data-lucide="plus" class="w-4 h-4"></i> Add Slot
+    </a>
+</div>
+
+{% if schedules %}
+<div class="space-y-3">
+    {% for s in schedules %}
+    <div class="bg-white rounded-2xl shadow-sm border border-blue-50 px-6 py-4 flex justify-between items-center">
+        <div>
+            <p class="font-semibold text-gray-800">{{ s.get_day_display }}</p>
+            <p class="text-gray-400 text-sm flex items-center gap-1 mt-0.5">
+                <i data-lucide="clock" class="w-4 h-4 text-gray-400"></i>
+                {{ s.start_time|time:"g:i A" }} – {{ s.end_time|time:"g:i A" }}
+            </p>
+        </div>
+        <div class="flex items-center gap-3">
+            {% if s.is_available %}
+                <span class="bg-green-100 text-green-700 text-xs font-semibold px-3 py-1 rounded-full">Available</span>
+            {% else %}
+                <span class="bg-gray-100 text-gray-500 text-xs font-semibold px-3 py-1 rounded-full">Unavailable</span>
+            {% endif %}
+            <a href="/schedules/delete/{{ s.pk }}/"
+               onclick="return confirm('Delete this slot?')"
+               class="text-red-400 hover:text-red-600 text-sm font-medium transition flex items-center gap-1">
+               <i data-lucide="trash-2" class="w-4 h-4"></i> Delete
+            </a>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="bg-blue-50 border border-blue-100 rounded-2xl px-8 py-12 text-center">
+    <p class="text-gray-500">No schedule slots yet.</p>
+    <a href="/schedules/add/" class="text-primary font-semibold hover:underline mt-2 inline-flex items-center gap-1">
+        Add one now <i data-lucide="arrow-right" class="w-4 h-4"></i>
+    </a>
+</div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block title %}Login{% endblock %}
+
+{% block auth_content %}
+<div class="min-h-screen flex items-center justify-center bg-soft">
+    <div class="bg-white w-full max-w-md rounded-2xl shadow-xl overflow-hidden">
+        <div class="bg-primary px-8 py-6">
+            <h2 class="brand text-white text-3xl">MediSchedule</h2>
+            <p class="text-blue-200 text-sm mt-1">Sign in to your account</p>
+        </div>
+        <div class="px-8 py-8">
+            <form method="post">
+                {% csrf_token %}
+                {% for field in form %}
+                <div class="mb-5">
+                    <label class="block text-sm font-semibold text-gray-700 mb-1">
+                        {{ field.label }}
+                    </label>
+                    <input
+                        type="{{ field.field.widget.input_type }}"
+                        name="{{ field.html_name }}"
+                        id="{{ field.id_for_label }}"
+                        class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300 transition"
+                        {% if field.value %}value="{{ field.value }}"{% endif %}>
+                    {% if field.errors %}
+                        <p class="text-red-500 text-xs mt-1">{{ field.errors|join:", " }}</p>
+                    {% endif %}
+                </div>
+                {% endfor %}
+                <button type="submit"
+                    class="w-full bg-primary text-white py-3 rounded-xl font-semibold hover:bg-blue-900 transition mt-2">
+                    Sign In
+                </button>
+            </form>
+            <hr class="my-6 border-gray-100">
+            <p class="text-center text-sm text-gray-500">
+                Don't have an account?
+                <a href="/accounts/register/" class="text-primary font-semibold hover:underline">
+                    Register here
+                </a>
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock auth_content %}

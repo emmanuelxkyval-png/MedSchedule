@@ -1,0 +1,395 @@
+{% load webpush_notifications %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MediSchedule – {% block title %}{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/tailwind.css' %}">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        .brand { font-family: 'Space Grotesk', sans-serif; }
+        .sidebar-link { transition: all 0.2s ease; }
+        .sidebar-link:hover { background: #1a2d4a; padding-left: 20px; }
+        #webpush-button {
+            background-color: #1e40af;
+            color: white;
+            padding: 8px 20px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: background 0.2s;
+            width: 100%;
+        }
+        #webpush-button:hover { background-color: #1e3a8a; }
+        #webpush-button.disabled { background-color: #374151; color: #9ca3af; }
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: #0a1628; }
+        ::-webkit-scrollbar-thumb { background: #1e40af; border-radius: 2px; }
+        .hero-gradient { background: linear-gradient(135deg, #0a1628 0%, #0f4c81 50%, #1e40af 100%); }
+        .card-hover { transition: all 0.3s ease; }
+        .card-hover:hover { transform: translateY(-5px); box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        .animate-fade-up { animation: fadeUp 0.8s ease forwards; }
+        .landing-nav { position: fixed; top: 0; width: 100%; z-index: 50; background: rgba(255,255,255,0.9); backdrop-filter: blur(8px); border-bottom: 1px solid #f3f4f6; padding: 16px 32px; display: flex; align-items: center; justify-content: space-between; }
+    </style>
+    {% webpush_header %}
+</head>
+<body class="bg-soft min-h-screen">
+
+{% if user.is_authenticated %}
+
+<div class="flex min-h-screen">
+
+    <!-- Sidebar Overlay -->
+    <div id="sidebar-overlay" class="fixed inset-0 bg-black/50 z-30 lg:hidden transition-opacity duration-300 opacity-0 pointer-events-none"></div>
+
+    <!-- ─── SIDEBAR ─────────────────────────────────────────── -->
+    <aside id="sidebar" class="w-60 min-h-screen bg-sidebar flex flex-col fixed left-0 top-0 z-40 transition-transform duration-300 -translate-x-full lg:translate-x-0">
+
+        <!-- Logo -->
+        <div class="px-6 py-5 border-b border-white/10 flex items-center justify-between">
+            <div class="flex items-center gap-2">
+                <i data-lucide="hospital" class="w-6 h-6 text-blue-400"></i>
+                <div>
+                    <h1 class="brand text-white text-lg font-bold leading-none">MediSchedule</h1>
+                    <p class="text-blue-300 text-[10px] mt-0.5">Hospital Management</p>
+                </div>
+            </div>
+            <!-- Close button for mobile -->
+            <button id="sidebar-close" class="lg:hidden p-1 text-blue-300 hover:text-white hover:bg-white/10 rounded-lg transition">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+        </div>
+
+        <!-- User Info -->
+        <div class="px-6 py-4 border-b border-white/10">
+            <div class="flex items-center gap-3">
+                <div class="w-9 h-9 rounded-full bg-accent flex items-center justify-center text-white font-bold text-sm">
+                    {{ user.username|slice:":1"|upper }}
+                </div>
+                <div>
+                    <p class="text-white text-sm font-medium">{{ user.username }}</p>
+                    <p class="text-blue-300 text-xs">{{ user.role|title }}</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation -->
+        <nav class="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
+
+            <!-- Dashboard link for all -->
+            <a href="/dashboard/" class="sidebar-link flex items-center gap-3 px-4 py-2.5 rounded-lg text-blue-200 hover:text-white text-sm">
+                <i data-lucide="layout-dashboard" class="w-4 h-4"></i> Dashboard
+            </a>
+
+            <!-- Patient -->
+            {% if user.role == 'patient' %}
+            <p class="text-blue-400 text-xs font-semibold uppercase px-4 pt-3 pb-1">Patient</p>
+            <a href="/appointments/book/" class="sidebar-link flex items-center gap-3 px-4 py-2.5 rounded-lg text-blue-200 hover:text-white text-sm">
+                <i data-lucide="calendar-plus" class="w-4 h-4"></i> Book Appointment
+            </a>
+            <a href="/appointments/my/" class="sidebar-link flex items-center gap-3 px-4 py-2.5 rounded-lg text-blue-200 hover:text-white text-sm">
+                <i data-lucide="calendar-check" class="w-4 h-4"></i> My Appointments
+            </a>
+            <a href="/patients/profile/" class="sidebar-link flex items-center gap-3 px-4 py-2.5 rounded-lg text-blue-200 hover:text-white text-sm">
+                <i data-lucide="user" class="w-4 h-4"></i> My Profile
+            </a>
+            {% endif %}
+
+            <!-- Doctor -->
+            {% if user.role == 'doctor' %}
+            <p class="text-blue-400 text-xs font-semibold uppercase px-4 pt-3 pb-1">Doctor</p>
+            <a href="/appointments/book/" class="sidebar-link flex items-center gap-3 px-4 py-2.5 rounded-lg text-blue-200 hover:text-white text-sm">
+                <i data-lucide="calendar-plus" class="w-4 h-4"></i> Book Appointment
+            </a>
+            <a href="/appointments/my/" class="sidebar-link flex items-center gap-3 px-4 py-2.5 rounded-lg text-blue-200 hover:text-white text-sm">
+                <i data-lucide="calendar-check" class="w-4 h-4"></i> My Appointments
+            </a>
+            <a href="/schedules/" class="sidebar-link flex items-center gap-3 px-4 py-2.5 rounded-lg text-blue-200 hover:text-white text-sm">
+                <i data-lucide="calendar-days" class="w-4 h-4"></i> My Schedule
+            </a>
+            {% endif %}
+
+            <!-- Nurse -->
+            {% if user.role == 'nurse' %}
+            <p class="text-blue-400 text-xs font-semibold uppercase px-4 pt-3 pb-1">Nurse</p>
+            <a href="/appointments/book/" class="sidebar-link flex items-center gap-3 px-4 py-2.5 rounded-lg text-blue-200 hover:text-white text-sm">
+                <i data-lucide="calendar-plus" class="w-4 h-4"></i> Book Appointment
+            </a>
+            <a href="/appointments/my/" class="sidebar-link flex items-center gap-3 px-4 py-2.5 rounded-lg text-blue-200 hover:text-white text-sm">
+                <i data-lucide="calendar-check" class="w-4 h-4"></i> My Appointments
+            </a>
+            {% endif %}
+
+            <!-- Pharmacist -->
+            {% if user.role == 'pharmacist' %}
+            <p class="text-blue-400 text-xs font-semibold uppercase px-4 pt-3 pb-1">Pharmacist</p>
+            <a href="/appointments/book/" class="sidebar-link flex items-center gap-3 px-4 py-2.5 rounded-lg text-blue-200 hover:text-white text-sm">
+                <i data-lucide="calendar-plus" class="w-4 h-4"></i> Book Appointment
+            </a>
+            <a href="/appointments/my/" class="sidebar-link flex items-center gap-3 px-4 py-2.5 rounded-lg text-blue-200 hover:text-white text-sm">
+                <i data-lucide="calendar-check" class="w-4 h-4"></i> My Appointments
+            </a>
+            {% endif %}
+
+            <!-- Lab Scientist -->
+            {% if user.role == 'lab_scientist' %}
+            <p class="text-blue-400 text-xs font-semibold uppercase px-4 pt-3 pb-1">Lab Scientist</p>
+            <a href="/appointments/book/" class="sidebar-link flex items-center gap-3 px-4 py-2.5 rounded-lg text-blue-200 hover:text-white text-sm">
+                <i data-lucide="calendar-plus" class="w-4 h-4"></i> Book Appointment
+            </a>
+            <a href="/appointments/my/" class="sidebar-link flex items-center gap-3 px-4 py-2.5 rounded-lg text-blue-200 hover:text-white text-sm">
+                <i data-lucide="calendar-check" class="w-4 h-4"></i> My Appointments
+            </a>
+            {% endif %}
+
+            <!-- Radiologist -->
+            {% if user.role == 'radiologist' %}
+            <p class="text-blue-400 text-xs font-semibold uppercase px-4 pt-3 pb-1">Radiologist</p>
+            <a href="/appointments/book/" class="sidebar-link flex items-center gap-3 px-4 py-2.5 rounded-lg text-blue-200 hover:text-white text-sm">
+                <i data-lucide="calendar-plus" class="w-4 h-4"></i> Book Appointment
+            </a>
+            <a href="/appointments/my/" class="sidebar-link flex items-center gap-3 px-4 py-2.5 rounded-lg text-blue-200 hover:text-white text-sm">
+                <i data-lucide="calendar-check" class="w-4 h-4"></i> My Appointments
+            </a>
+            {% endif %}
+
+            <!-- Physiotherapist -->
+            {% if user.role == 'physiotherapist' %}
+            <p class="text-blue-400 text-xs font-semibold uppercase px-4 pt-3 pb-1">Physiotherapist</p>
+            <a href="/appointments/book/" class="sidebar-link flex items-center gap-3 px-4 py-2.5 rounded-lg text-blue-200 hover:text-white text-sm">
+                <i data-lucide="calendar-plus" class="w-4 h-4"></i> Book Appointment
+            </a>
+            <a href="/appointments/my/" class="sidebar-link flex items-center gap-3 px-4 py-2.5 rounded-lg text-blue-200 hover:text-white text-sm">
+                <i data-lucide="calendar-check" class="w-4 h-4"></i> My Appointments
+            </a>
+            {% endif %}
+
+            <!-- Dentist -->
+            {% if user.role == 'dentist' %}
+            <p class="text-blue-400 text-xs font-semibold uppercase px-4 pt-3 pb-1">Dentist</p>
+            <a href="/appointments/book/" class="sidebar-link flex items-center gap-3 px-4 py-2.5 rounded-lg text-blue-200 hover:text-white text-sm">
+                <i data-lucide="calendar-plus" class="w-4 h-4"></i> Book Appointment
+            </a>
+            <a href="/appointments/my/" class="sidebar-link flex items-center gap-3 px-4 py-2.5 rounded-lg text-blue-200 hover:text-white text-sm">
+                <i data-lucide="calendar-check" class="w-4 h-4"></i> My Appointments
+            </a>
+            {% endif %}
+
+            <!-- Surgeon -->
+            {% if user.role == 'surgeon' %}
+            <p class="text-blue-400 text-xs font-semibold uppercase px-4 pt-3 pb-1">Surgeon</p>
+            <a href="/appointments/book/" class="sidebar-link flex items-center gap-3 px-4 py-2.5 rounded-lg text-blue-200 hover:text-white text-sm">
+                <i data-lucide="calendar-plus" class="w-4 h-4"></i> Book Appointment
+            </a>
+            <a href="/appointments/my/" class="sidebar-link flex items-center gap-3 px-4 py-2.5 rounded-lg text-blue-200 hover:text-white text-sm">
+                <i data-lucide="calendar-check" class="w-4 h-4"></i> My Appointments
+            </a>
+            {% endif %}
+
+            <!-- Anesthetist -->
+            {% if user.role == 'anesthetist' %}
+            <p class="text-blue-400 text-xs font-semibold uppercase px-4 pt-3 pb-1">Anesthetist</p>
+            <a href="/appointments/book/" class="sidebar-link flex items-center gap-3 px-4 py-2.5 rounded-lg text-blue-200 hover:text-white text-sm">
+                <i data-lucide="calendar-plus" class="w-4 h-4"></i> Book Appointment
+            </a>
+            <a href="/appointments/my/" class="sidebar-link flex items-center gap-3 px-4 py-2.5 rounded-lg text-blue-200 hover:text-white text-sm">
+                <i data-lucide="calendar-check" class="w-4 h-4"></i> My Appointments
+            </a>
+            {% endif %}
+
+            <!-- Dietitian -->
+            {% if user.role == 'dietitian' %}
+            <p class="text-blue-400 text-xs font-semibold uppercase px-4 pt-3 pb-1">Dietitian</p>
+            <a href="/appointments/book/" class="sidebar-link flex items-center gap-3 px-4 py-2.5 rounded-lg text-blue-200 hover:text-white text-sm">
+                <i data-lucide="calendar-plus" class="w-4 h-4"></i> Book Appointment
+            </a>
+            <a href="/appointments/my/" class="sidebar-link flex items-center gap-3 px-4 py-2.5 rounded-lg text-blue-200 hover:text-white text-sm">
+                <i data-lucide="calendar-check" class="w-4 h-4"></i> My Appointments
+            </a>
+            {% endif %}
+
+            <!-- Receptionist -->
+            {% if user.role == 'receptionist' %}
+            <p class="text-blue-400 text-xs font-semibold uppercase px-4 pt-3 pb-1">Receptionist</p>
+            <a href="/appointments/book/" class="sidebar-link flex items-center gap-3 px-4 py-2.5 rounded-lg text-blue-200 hover:text-white text-sm">
+                <i data-lucide="calendar-plus" class="w-4 h-4"></i> Book Appointment
+            </a>
+            <a href="/appointments/my/" class="sidebar-link flex items-center gap-3 px-4 py-2.5 rounded-lg text-blue-200 hover:text-white text-sm">
+                <i data-lucide="calendar-check" class="w-4 h-4"></i> My Appointments
+            </a>
+            {% endif %}
+
+            <!-- IT Staff -->
+            {% if user.role == 'it_staff' %}
+            <p class="text-blue-400 text-xs font-semibold uppercase px-4 pt-3 pb-1">IT Staff</p>
+            <a href="/appointments/my/" class="sidebar-link flex items-center gap-3 px-4 py-2.5 rounded-lg text-blue-200 hover:text-white text-sm">
+                <i data-lucide="calendar-check" class="w-4 h-4"></i> My Appointments
+            </a>
+            {% endif %}
+
+            <!-- Admin Staff -->
+            {% if user.role == 'admin_staff' %}
+            <p class="text-blue-400 text-xs font-semibold uppercase px-4 pt-3 pb-1">Admin Staff</p>
+            <a href="/appointments/my/" class="sidebar-link flex items-center gap-3 px-4 py-2.5 rounded-lg text-blue-200 hover:text-white text-sm">
+                <i data-lucide="calendar-check" class="w-4 h-4"></i> My Appointments
+            </a>
+            {% endif %}
+
+            <!-- Manager -->
+            {% if user.role == 'manager' %}
+            <p class="text-blue-400 text-xs font-semibold uppercase px-4 pt-3 pb-1">Manager</p>
+            <a href="/appointments/manager-meeting/" class="sidebar-link flex items-center gap-3 px-4 py-2.5 rounded-lg text-blue-200 hover:text-white text-sm">
+                <i data-lucide="megaphone" class="w-4 h-4"></i> Call Meeting
+            </a>
+            <a href="/appointments/my/" class="sidebar-link flex items-center gap-3 px-4 py-2.5 rounded-lg text-blue-200 hover:text-white text-sm">
+                <i data-lucide="calendar-check" class="w-4 h-4"></i> Appointments
+            </a>
+            {% endif %}
+
+            <!-- Admin -->
+            {% if user.role == 'admin' %}
+            <p class="text-blue-400 text-xs font-semibold uppercase px-4 pt-3 pb-1">Admin</p>
+            <a href="/admin/" class="sidebar-link flex items-center gap-3 px-4 py-2.5 rounded-lg text-blue-200 hover:text-white text-sm">
+                <i data-lucide="settings" class="w-4 h-4"></i> Admin Panel
+            </a>
+            {% endif %}
+
+            <!-- General — for all roles -->
+            <p class="text-blue-400 text-xs font-semibold uppercase px-4 pt-3 pb-1">General</p>
+            <a href="/notifications/" class="sidebar-link flex items-center gap-3 px-4 py-2.5 rounded-lg text-blue-200 hover:text-white text-sm">
+                <i data-lucide="bell" class="w-4 h-4"></i> Notifications
+            </a>
+            <a href="/accounts/settings/" class="sidebar-link flex items-center gap-3 px-4 py-2.5 rounded-lg text-blue-200 hover:text-white text-sm">
+                <i data-lucide="settings" class="w-4 h-4"></i> Settings
+            </a>
+
+        </nav>
+
+        <!-- Logout -->
+        <div class="px-4 py-4 border-t border-white/10">
+            <form method="post" action="/accounts/logout/">
+                {% csrf_token %}
+                <button type="submit"
+                    class="w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-red-300 hover:text-white hover:bg-red-600/20 text-sm transition">
+                    <i data-lucide="log-out" class="w-4 h-4"></i> Logout
+                </button>
+            </form>
+        </div>
+
+    </aside>
+
+    <!-- ─── MAIN CONTENT ─────────────────────────────────────── -->
+    <div class="ml-0 lg:ml-60 flex-1 flex flex-col min-h-screen">
+
+        <!-- Top Bar -->
+        <header class="bg-white border-b border-gray-100 px-4 sm:px-8 py-4 flex items-center justify-between sticky top-0 z-30">
+            <div class="flex items-center gap-3">
+                <button id="sidebar-toggle" class="lg:hidden p-2 text-gray-600 hover:text-primary hover:bg-gray-100 rounded-lg transition">
+                    <i data-lucide="menu" class="w-6 h-6"></i>
+                </button>
+                <div>
+                    <h2 class="brand text-gray-800 text-base sm:text-lg font-semibold">
+                        {% block page_title %}Welcome{% endblock %}
+                    </h2>
+                    <p class="text-gray-400 text-xs">
+                        {{ user.get_full_name|default:user.username }} — {{ user.role|title }}
+                    </p>
+                </div>
+            </div>
+            <div class="flex items-center gap-4">
+                <a href="/notifications/"
+                   class="text-gray-500 hover:text-primary transition flex items-center">
+                   <i data-lucide="bell" class="w-5 h-5"></i>
+                </a>
+                <a href="/accounts/settings/"
+                   class="w-8 h-8 rounded-full bg-accent flex items-center justify-center text-white font-bold text-sm hover:bg-primary transition">
+                    {{ user.username|slice:":1"|upper }}
+                </a>
+            </div>
+        </header>
+
+        <!-- Messages -->
+        <div class="px-8 pt-4">
+            {% if messages %}
+                {% for message in messages %}
+                <div class="mb-3 px-4 py-3 rounded-xl text-sm font-medium
+                    {% if message.tags == 'success' %}
+                        bg-green-50 text-green-800 border border-green-200
+                    {% elif message.tags == 'error' %}
+                        bg-red-50 text-red-800 border border-red-200
+                    {% else %}
+                        bg-blue-50 text-blue-800 border border-blue-200
+                    {% endif %}">
+                    {{ message }}
+                </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+
+        <!-- Page Content -->
+        <main class="px-8 py-6 flex-1">
+            {% block content %}{% endblock %}
+        </main>
+
+    </div>
+
+</div>
+
+{% else %}
+
+<!-- ─── UNAUTHENTICATED ───────────────────────────────────────── -->
+<main>
+    {% block auth_content %}{% endblock %}
+</main>
+
+{% endif %}
+
+<!-- Service Worker & Lucide Icons -->
+<script>
+if ('serviceWorker' in navigator && 'PushManager' in navigator) {
+    navigator.serviceWorker.register('/static/js/sw.js')
+    .then(function(reg) {
+        console.log('SW registered');
+    }).catch(function(err) {
+        console.log('SW failed:', err);
+    });
+}
+
+// Initialize Lucide Icons
+lucide.createIcons();
+
+// Mobile Sidebar Toggle Logic
+const sidebar = document.getElementById('sidebar');
+const sidebarOverlay = document.getElementById('sidebar-overlay');
+const sidebarToggle = document.getElementById('sidebar-toggle');
+const sidebarClose = document.getElementById('sidebar-close');
+
+if (sidebarToggle && sidebar && sidebarOverlay) {
+    function toggleSidebar() {
+        const isOpen = !sidebar.classList.contains('-translate-x-full');
+        if (isOpen) {
+            sidebar.classList.add('-translate-x-full');
+            sidebarOverlay.classList.add('opacity-0', 'pointer-events-none');
+            sidebarOverlay.classList.remove('opacity-100');
+        } else {
+            sidebar.classList.remove('-translate-x-full');
+            sidebarOverlay.classList.remove('opacity-0', 'pointer-events-none');
+            sidebarOverlay.classList.add('opacity-100');
+        }
+    }
+
+    sidebarToggle.addEventListener('click', toggleSidebar);
+    if (sidebarClose) sidebarClose.addEventListener('click', toggleSidebar);
+    sidebarOverlay.addEventListener('click', toggleSidebar);
+}
+</script>
+
+</body>
+</html>

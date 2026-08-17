@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block title %}{% if editing %}Edit{% else %}Add{% endif %} Availability{% endblock %}
+{% block page_title %}{% if editing %}Edit Availability{% else %}Add Availability{% endif %}{% endblock %}
+
+{% block content %}
+<div class="max-w-lg mx-auto">
+    <div class="bg-white rounded-2xl shadow-sm border border-blue-50 overflow-hidden">
+        <div class="bg-primary px-6 py-5">
+            <h2 class="brand text-white text-xl font-bold flex items-center gap-2">
+                {% if editing %}
+                    <i data-lucide="edit" class="w-5 h-5"></i> Edit {{ availability.get_day_display }} Availability
+                {% else %}
+                    <i data-lucide="calendar" class="w-5 h-5"></i> Add Availability
+                {% endif %}
+            </h2>
+            <p class="text-blue-200 text-sm mt-1">Set when you are available for appointments</p>
+        </div>
+        <div class="px-6 py-6">
+            <form method="post">
+                {% csrf_token %}
+                {% for field in form %}
+                <div class="mb-5">
+                    <label class="block text-sm font-semibold text-gray-700 mb-1">
+                        {{ field.label }}
+                    </label>
+                    {{ field }}
+                    {% if field.help_text %}
+                        <p class="text-gray-400 text-xs mt-1">{{ field.help_text }}</p>
+                    {% endif %}
+                    {% if field.errors %}
+                        <div class="mt-1 px-3 py-2 bg-red-50 border border-red-100 rounded-lg">
+                            {% for error in field.errors %}
+                                <p class="text-red-500 text-xs">• {{ error }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+                {% endfor %}
+                <div class="flex gap-3 mt-6">
+                    <button type="submit"
+                        class="flex-1 bg-primary text-white py-3 rounded-xl font-semibold hover:bg-blue-900 transition flex items-center justify-center gap-2">
+                        <i data-lucide="check" class="w-4 h-4"></i> {% if editing %}Save Changes{% else %}Add Availability{% endif %}
+                    </button>
+                    <a href="/schedules/"
+                       class="flex-1 border border-gray-200 text-gray-600 py-3 rounded-xl font-semibold hover:bg-gray-50 transition text-center flex items-center justify-center gap-2">
+                        <i data-lucide="x" class="w-4 h-4"></i> Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
