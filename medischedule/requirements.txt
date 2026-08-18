@@ -14,3 +14,6 @@ asgiref
 sqlparse
 tzdata
 urllib3
+psycopg2-binary==2.9.9
+dj-database-url==2.2.0
+gunicorn==22.0.0
