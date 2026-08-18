@@ -2,6 +2,7 @@ import requests
 import logging
 from django.conf import settings
 from django.core.mail import send_mail
+from django.core.mail import get_connection
 from .models import Notification
 
 logger = logging.getLogger(__name__)
@@ -19,12 +20,14 @@ def send_email_notification(user, subject, message):
     if not user.email:
         return
     try:
+        connection = get_connection(timeout=10)
         send_mail(
             subject=subject,
             message=message,
             from_email=settings.DEFAULT_FROM_EMAIL,
             recipient_list=[user.email],
-            fail_silently=False,
+            fail_silently=True,
+            connection=connection,
         )
     except Exception as e:
         logger.error(f"Email failed for {user.email}: {e}")
