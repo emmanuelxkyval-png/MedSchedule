@@ -1,0 +1,20 @@
+# Python / Virtual environment
+.venv/
+venv/
+ENV/
+__pycache__/
+*.pyc
+*.pyo
+
+# Django
+db.sqlite3
+media/
+local_settings.py
+
+# SEN 310 Deliverables
+*.pdf
+
+# IDE & OS files
+.idea/
+.vscode/
+.DS_Store
