@@ -11,10 +11,11 @@ db.sqlite3
 media/
 local_settings.py
 
-# SEN 310 Deliverables
+# Deliverables
 *.pdf
 
 # IDE & OS files
 .idea/
 .vscode/
 .DS_Store
+
