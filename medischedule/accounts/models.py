@@ -65,6 +65,8 @@ class User(AbstractUser):
     # Notification preferences
     email_notifications = models.BooleanField(default=True)
     sms_notifications = models.BooleanField(default=True)
+
+    REQUIRED_FIELDS = ['email', 'phone']
     
     def __str__(self):
         return f"{self.get_full_name() or self.username} ({self.get_role_display()})"
