@@ -9,6 +9,34 @@
             <p class="text-blue-200 text-sm mt-1">Sign in to your account</p>
         </div>
         <div class="px-8 py-8">
+            {% if messages %}
+                {% for message in messages %}
+                <div class="mb-5 p-4 rounded-xl text-sm font-medium
+                    {% if message.tags == 'success' %}
+                        bg-green-50 text-green-800 border border-green-200
+                    {% elif message.tags == 'error' %}
+                        bg-red-50 text-red-800 border border-red-200
+                    {% else %}
+                        bg-blue-50 text-blue-800 border border-blue-200
+                    {% endif %}">
+                    {{ message }}
+                </div>
+                {% endfor %}
+            {% endif %}
+
+            {% if form.non_field_errors %}
+                <div class="mb-5 p-4 bg-red-50 border border-red-200 rounded-xl space-y-1">
+                    {% for error in form.non_field_errors %}
+                        <div class="flex items-start gap-2.5 text-red-700 text-sm font-medium">
+                            <svg class="w-5 h-5 text-red-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            <span>{{ error }}</span>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
             <form method="post">
                 {% csrf_token %}
                 {% for field in form %}
@@ -20,10 +48,10 @@
                         type="{{ field.field.widget.input_type }}"
                         name="{{ field.html_name }}"
                         id="{{ field.id_for_label }}"
-                        class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300 transition"
+                        class="w-full border {% if field.errors %}border-red-300 focus:ring-red-200{% else %}border-gray-200 focus:ring-blue-300{% endif %} rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 transition"
                         {% if field.value %}value="{{ field.value }}"{% endif %}>
                     {% if field.errors %}
-                        <p class="text-red-500 text-xs mt-1">{{ field.errors|join:", " }}</p>
+                        <p class="text-red-500 text-xs mt-1 font-medium">• {{ field.errors|join:", " }}</p>
                     {% endif %}
                 </div>
                 {% endfor %}

@@ -9,6 +9,34 @@
             <p class="text-blue-200 text-sm mt-1">Join MediSchedule as a patient</p>
         </div>
         <div class="px-8 py-8">
+            {% if messages %}
+                {% for message in messages %}
+                <div class="mb-5 p-4 rounded-xl text-sm font-medium
+                    {% if message.tags == 'success' %}
+                        bg-green-50 text-green-800 border border-green-200
+                    {% elif message.tags == 'error' %}
+                        bg-red-50 text-red-800 border border-red-200
+                    {% else %}
+                        bg-blue-50 text-blue-800 border border-blue-200
+                    {% endif %}">
+                    {{ message }}
+                </div>
+                {% endfor %}
+            {% endif %}
+
+            {% if form.non_field_errors %}
+                <div class="mb-5 p-4 bg-red-50 border border-red-200 rounded-xl space-y-1">
+                    {% for error in form.non_field_errors %}
+                        <div class="flex items-start gap-2.5 text-red-700 text-sm font-medium">
+                            <svg class="w-5 h-5 text-red-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            <span>{{ error }}</span>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
             <form method="post">
                 {% csrf_token %}
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
