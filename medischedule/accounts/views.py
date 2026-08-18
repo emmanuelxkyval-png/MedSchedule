@@ -18,9 +18,13 @@ def register(request):
         form = RegisterForm(request.POST)
         if form.is_valid():
             user = form.save()
-            notify_account_created(user)
+            try:
+                notify_account_created(user)
+            except Exception as e:
+                import logging
+                logging.getLogger(__name__).error(f"Account notification error: {e}")
             messages.success(request,
-                'Account created! Check your email and phone for confirmation.')
+                'Account created successfully! Please log in.')
             return redirect('login')
     else:
         form = RegisterForm()
