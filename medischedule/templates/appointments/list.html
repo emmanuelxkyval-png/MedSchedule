@@ -50,47 +50,47 @@
     {% if appointments %}
     <div class="space-y-4">
         {% for appt in appointments %}
-        <div class="bg-white rounded-2xl shadow-sm border border-blue-50 px-6 py-5">
-            <div class="flex justify-between items-start">
+        <div class="bg-white rounded-2xl shadow-sm border border-blue-50 px-4 sm:px-6 py-4 sm:py-5">
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
                 <div class="flex-1">
 
                     {% if user.role == 'patient' %}
-                    <p class="font-semibold text-gray-800 text-lg flex items-center gap-2">
+                    <p class="font-semibold text-gray-800 text-base sm:text-lg flex items-center gap-2">
                         {% if appt.appointment_type == 'manager_meeting' %}
                             <i data-lucide="megaphone" class="w-5 h-5 text-gray-500"></i> Staff Meeting
                         {% else %}
                             {{ appt.doctor.get_full_name|default:appt.doctor.username }}
-                            <span class="text-gray-400 text-sm font-normal">
+                            <span class="text-gray-400 text-xs sm:text-sm font-normal">
                                 ({{ appt.doctor.role|title }})
                             </span>
                         {% endif %}
                     </p>
                     {% else %}
-                    <p class="font-semibold text-gray-800 text-lg flex items-center gap-2">
+                    <p class="font-semibold text-gray-800 text-base sm:text-lg flex items-center gap-2">
                         {% if appt.appointment_type == 'manager_meeting' %}
                             <i data-lucide="megaphone" class="w-5 h-5 text-gray-500"></i> Meeting by {{ appt.patient.get_full_name|default:appt.patient.username }}
                         {% elif appt.appointment_type == 'staff_meeting' %}
                             Meeting with {{ appt.patient.get_full_name|default:appt.patient.username }}
                         {% else %}
                             {{ appt.patient.get_full_name|default:appt.patient.username }}
-                            <span class="text-gray-400 text-sm font-normal">(Patient)</span>
+                            <span class="text-gray-400 text-xs sm:text-sm font-normal">(Patient)</span>
                         {% endif %}
                     </p>
                     {% endif %}
 
-                    <p class="text-gray-400 text-sm mt-1 flex items-center gap-1.5">
+                    <p class="text-gray-400 text-xs sm:text-sm mt-1 flex items-center gap-1.5 flex-wrap">
                         <i data-lucide="calendar" class="w-4 h-4 text-gray-400"></i> {{ appt.date }} &nbsp;|&nbsp; <i data-lucide="clock" class="w-4 h-4 text-gray-400"></i> {{ appt.time|time:"g:i A" }}
                     </p>
 
                     {% if appt.reason %}
-                    <p class="text-gray-500 text-sm mt-2 bg-gray-50 px-3 py-2 rounded-lg">
+                    <p class="text-gray-500 text-xs sm:text-sm mt-2 bg-gray-50 px-3 py-2 rounded-lg">
                         {{ appt.reason }}
                     </p>
                     {% endif %}
 
                 </div>
 
-                <div class="flex flex-col items-end gap-3 ml-4">
+                <div class="flex sm:flex-col items-center sm:items-end justify-between sm:justify-start w-full sm:w-auto gap-2 sm:gap-3 pt-2 sm:pt-0 border-t sm:border-t-0 border-gray-100">
                     {% if appt.status == 'pending' %}
                         <span class="bg-yellow-100 text-yellow-700 text-xs font-semibold px-3 py-1.5 rounded-full flex items-center gap-1">
                             <i data-lucide="clock" class="w-3.5 h-3.5"></i> Pending

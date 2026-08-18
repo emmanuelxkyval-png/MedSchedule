@@ -6,30 +6,30 @@
 <div class="max-w-3xl mx-auto space-y-6">
 
     <!-- Profile header -->
-    <div class="bg-gradient-to-r from-blue-600 to-blue-800 rounded-2xl px-8 py-6 text-white">
-        <div class="flex items-center gap-4">
-            <div class="w-16 h-16 rounded-full bg-white/20 flex items-center justify-center text-3xl font-bold brand">
+    <div class="bg-gradient-to-r from-blue-600 to-blue-800 rounded-2xl px-5 sm:px-8 py-5 sm:py-6 text-white">
+        <div class="flex items-center gap-3 sm:gap-4">
+            <div class="w-12 h-12 sm:w-16 sm:h-16 rounded-full bg-white/20 flex items-center justify-center text-xl sm:text-3xl font-bold brand shrink-0">
                 {{ user.username|slice:":1"|upper }}
             </div>
             <div>
-                <h2 class="brand text-2xl font-bold">
+                <h2 class="brand text-xl sm:text-2xl font-bold">
                     {{ user.get_full_name|default:user.username }}
                 </h2>
-                <p class="text-blue-200 text-sm">{{ user.email }}</p>
-                <p class="text-blue-200 text-sm">{{ user.phone|default:"No phone set" }}</p>
+                <p class="text-blue-200 text-xs sm:text-sm">{{ user.email }}</p>
+                <p class="text-blue-200 text-xs sm:text-sm">{{ user.phone|default:"No phone set" }}</p>
             </div>
         </div>
     </div>
 
     <!-- Personal Information -->
     <div class="bg-white rounded-2xl shadow-sm border border-blue-50 overflow-hidden">
-        <div class="bg-gray-50 px-6 py-4 border-b border-gray-100">
-            <h3 class="font-semibold text-gray-800 flex items-center gap-2">
+        <div class="bg-gray-50 px-4 sm:px-6 py-3.5 sm:py-4 border-b border-gray-100">
+            <h3 class="font-semibold text-gray-800 text-base sm:text-lg flex items-center gap-2">
                 <i data-lucide="user" class="w-5 h-5 text-blue-600"></i> Personal Information
             </h3>
             <p class="text-gray-400 text-xs mt-0.5">Your basic account details</p>
         </div>
-        <div class="px-6 py-6">
+        <div class="px-4 sm:px-6 py-5 sm:py-6">
             <form method="post">
                 {% csrf_token %}
                 <input type="hidden" name="form_type" value="personal">

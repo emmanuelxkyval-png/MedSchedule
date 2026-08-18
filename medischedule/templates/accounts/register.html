@@ -2,13 +2,13 @@
 {% block title %}Create Account{% endblock %}
 
 {% block auth_content %}
-<div class="min-h-screen flex items-center justify-center bg-soft py-8">
+<div class="min-h-screen flex items-center justify-center bg-soft px-4 py-8">
     <div class="bg-white w-full max-w-2xl rounded-2xl shadow-xl overflow-hidden">
-        <div class="bg-primary px-8 py-6">
-            <h2 class="brand text-white text-3xl">Create Account</h2>
-            <p class="text-blue-200 text-sm mt-1">Join MediSchedule as a patient</p>
+        <div class="bg-primary px-5 sm:px-8 py-5 sm:py-6">
+            <h2 class="brand text-white text-2xl sm:text-3xl">Create Account</h2>
+            <p class="text-blue-200 text-xs sm:text-sm mt-1">Join MediSchedule as a patient</p>
         </div>
-        <div class="px-8 py-8">
+        <div class="px-5 sm:px-8 py-6 sm:py-8">
             {% if messages %}
                 {% for message in messages %}
                 <div class="mb-5 p-4 rounded-xl text-sm font-medium
